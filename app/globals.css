@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #f4efe6;
+  --color-surface: #ebe4d6;
+  --color-ink: #2b2d30;
+  --color-muted: #676a6e;
+  --color-line: #dcd4c6;
+  --color-accent: #c8202a;
+  --color-yellow: #e8b800;
+  --color-band: #c8202a;
+  --color-on-band: #f8f3ea;
+  --color-band-muted: rgb(248 243 234 / 0.78);
+  --color-band-line: rgb(248 243 234 / 0.22);
+  --color-btn: #2b2d30;
+  --color-on-btn: #f4efe6;
+
+  --animate-rise: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-fade-in: fade-in 1.2s 0.2s both;
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-wipe: wipe 0.7s 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @keyframes wipe { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}
+
+@theme inline {
+  --font-display: var(--font-barlow-condensed), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-barlow), system-ui, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--color-ink); text-decoration: none; }
+  a:hover { color: var(--color-accent); }
+  ::placeholder { color: #9a968e; }
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+/* Centered 1240px column with fluid side gutters. */
+@utility shell {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4vw, 48px);
+}
+
+/* Display type: condensed, uppercase headings. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+}
+
+/* Hover fill that wipes in from the left; set the color with [--wipe:...]. */
+@utility fill-wipe {
+  background-image: linear-gradient(var(--wipe), var(--wipe));
+  background-repeat: no-repeat;
+  background-size: 0 100%;
+  transition: background-size 0.45s cubic-bezier(0.77, 0, 0.18, 1), color 0.3s, border-color 0.3s;
+  &:hover { background-size: 100% 100%; }
+}
+
+/* Yellow underline that grows on hover. */
+@utility underline-wipe {
+  padding-bottom: 4px;
+  background: linear-gradient(var(--color-yellow), var(--color-yellow)) no-repeat 0 100% / 0 2px;
+  transition: background-size 0.35s;
+  &:hover { background-size: 100% 2px; }
+}
