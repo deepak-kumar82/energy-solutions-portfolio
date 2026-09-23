@@ -69,7 +69,7 @@ const half = '(max-width: 760px) 100vw, 50vw';
 const third = '(max-width: 760px) 100vw, 33vw';
 
 function Photo({ name, alt = '', sizes = half, priority }) {
-  return <Image src={`/img/${name}.jpg`} alt={alt} fill sizes={sizes} priority={priority} />;
+  return <Image src={`/img/${name}.jpg`} alt={alt} fill sizes={sizes} priority={priority} loading='eager'/>;
 }
 
 export default function Home() {
@@ -309,7 +309,11 @@ export default function Home() {
               <span>Shop 23, Dher Ka Balaji, Sikar Road, Jaipur</span>
             </div>
           </div>
-          <div className="legal"><span>GSTIN 08CYVPK1773M2ZH</span><span>© 2026 Energy Solutions, Jaipur</span></div>
+          <div className="legal">
+            <span>GSTIN 08CYVPK1773M2ZH</span>
+            <span>© 2026 Energy Solutions, Jaipur</span>
+            <span>Developed and managed by <a href="https://deeporion.com" target="_blank" rel="noopener">Deeporion Technology Pvt Ltd</a></span>
+          </div>
         </div>
       </footer>
 

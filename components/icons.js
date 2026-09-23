@@ -10,6 +10,14 @@ export const Phone = ({ strokeWidth = 1.5 }) => (
   </svg>
 );
 
+// Speech bubble: used where a contact button has no text label (the mobile header).
+export const Message = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" aria-hidden="true">
+    <path d="M20 12.5a7.5 7.5 0 0 1-10.9 6.7L4.5 20.5l1.3-4.2A7.5 7.5 0 1 1 20 12.5z" />
+    <path d="M9 11h6M9 14h4" strokeLinecap="round" />
+  </svg>
+);
+
 // Five-cell charge meter used in section labels; `on` is how many cells are filled.
 export const Cells = ({ on }) => (
   <span className="cells" aria-hidden="true">

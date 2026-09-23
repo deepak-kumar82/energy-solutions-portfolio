@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { Arrow } from './icons';
+import { Arrow, Message } from './icons';
 import { NAV, PHONE, PHONE_TEL } from './site';
 
 // Full-width bar at the top; docks into a floating pill once #hero-end has scrolled above the viewport.
@@ -46,7 +46,7 @@ export default function Header() {
             <a className="nav-call" href={PHONE_TEL}>{PHONE}</a>
             <a className="btn btn-dark" href="#contact" aria-label="Get a quote">
               <span className="nav-quote-label">Get a quote</span>
-              <span className="isle"><Arrow /></span>
+              <span className="isle"><span className="ic-arrow"><Arrow /></span><span className="ic-msg"><Message /></span></span>
             </a>
             <button className="burger" type="button" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(!open)}>
               <span />

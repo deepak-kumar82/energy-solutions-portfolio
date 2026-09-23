@@ -133,8 +133,12 @@ p { margin: 0; }
 .burger span:first-child { top: 18px; } .burger span:last-child { top: 25px; }
 .menu-open .burger span:first-child { transform: translateY(3.5px) rotate(45deg); }
 .menu-open .burger span:last-child { transform: translateY(-3.5px) rotate(-45deg); }
-.nav-quote-label { display: none; }
-@media (min-width: 560px) { .nav-quote-label { display: inline; } }
+/* Phones: the label is hidden, so the header button shows a speech bubble instead of the arrow */
+.nav-quote-label, .ic-arrow { display: none; }
+.ic-msg { display: grid; }
+.ic-msg svg { width: 18px; height: 18px; }
+@media (max-width: 559px) { .hdr .btn { padding: 0 5px; } }
+@media (min-width: 560px) { .nav-quote-label { display: inline; } .ic-arrow { display: grid; } .ic-msg { display: none; } }
 @media (max-width: 979px) { .hdr-in { grid-template-columns: 1fr auto; } }
 @media (min-width: 980px) { .nav-links { display: flex; } .burger { display: none; } }
 @media (min-width: 1180px) { .nav-call { display: inline; } }
@@ -332,6 +336,9 @@ footer { padding-block: 56px 32px; border-top: 1px solid var(--line); }
 .foot a { text-decoration: none; color: var(--ink); }
 .foot a:hover { color: var(--amber-deep); }
 .legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font: 400 12px var(--mono); color: var(--slate); }
+
+.legal a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; transition: color .3s var(--ease), text-decoration-color .3s var(--ease); }
+.legal a:hover { color: var(--amber-deep); text-decoration-color: currentColor; }
 
 /* Mobile action bar */
 .bar-m { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; display: grid; grid-template-columns: 1fr 1.3fr; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)); background: rgb(255 255 255 / .88); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: 0 -1px 0 var(--line); }
