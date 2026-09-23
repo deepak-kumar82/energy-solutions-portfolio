@@ -1,78 +1,68 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Arrow } from './icons';
 import { WA_NUMBER } from './site';
-
-const label = 'flex flex-col gap-2 text-xs font-semibold tracking-[.1em] text-muted uppercase';
-const field =
-  'border border-line bg-bg px-3.5 text-base font-light text-ink normal-case tracking-normal outline-none transition-colors duration-250 focus:border-accent';
 
 export default function ContactForm() {
   const [kind, setKind] = useState('home');
+  const [req, setReq] = useState('');
+  const [error, setError] = useState('');
+
+  // Filled in from the backup sizer, and from the homes / businesses cards ([data-kind] links).
+  useEffect(() => {
+    const onPrefill = (e) => { setReq(e.detail.req); setKind(e.detail.kind); };
+    const onClick = (e) => { const k = e.target.closest('[data-kind]')?.dataset.kind; if (k) setKind(k); };
+    addEventListener('quote:prefill', onPrefill);
+    document.addEventListener('click', onClick);
+    return () => { removeEventListener('quote:prefill', onPrefill); document.removeEventListener('click', onClick); };
+  }, []);
 
   function submit(e) {
     e.preventDefault();
-    const f = Object.fromEntries(new FormData(e.currentTarget));
+    const form = e.currentTarget;
+    const name = form.elements.name.value.trim();
+    const phone = form.elements.phone.value.replace(/\D/g, '');
+    if (!name || phone.length < 10) {
+      setError(!name ? 'Add your name so we know who to ask for.' : 'Enter a 10-digit phone number so we can call you back.');
+      (!name ? form.elements.name : form.elements.phone).focus();
+      return;
+    }
+    setError('');
     const text = [
-      'Hello Energy Solutions,',
-      `Name: ${f.name}`,
-      `Phone: ${f.phone}`,
+      'Hello Energy Solutions, I would like a quote.',
+      `Name: ${name}`,
+      `Phone: ${form.elements.phone.value.trim()}`,
       `For: ${kind === 'home' ? 'Home' : 'Business'}`,
-      `Requirement: ${f.req}`,
+      `Requirement: ${req}`,
     ].join('\n');
     window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
   }
 
-  const toggle = (value, text) => (
-    <button
-      type="button"
-      aria-pressed={kind === value}
-      onClick={() => setKind(value)}
-      className={`h-[46px] cursor-pointer border border-line text-sm font-medium tracking-[.02em] normal-case transition-colors duration-250 ${kind === value ? 'bg-ink text-bg' : 'bg-bg text-ink'}`}
-    >
-      {text}
-    </button>
-  );
-
   return (
-    <form
-      data-reveal
-      data-delay="120"
-      onSubmit={submit}
-      className="flex flex-col gap-[22px] border border-t-[3px] border-line border-t-accent bg-surface p-[clamp(24px,3vw,40px)]"
-    >
-      <p className="display mb-1 text-2xl">Send an enquiry</p>
-      <label className={label}>
-        Name
-        <input name="name" required autoComplete="name" className={`${field} h-[46px]`} />
-      </label>
-      <label className={label}>
-        Phone
-        <input name="phone" type="tel" required autoComplete="tel" className={`${field} h-[46px]`} />
-      </label>
-      <div className={label}>
-        This is for
-        <div className="grid grid-cols-2 gap-2">
-          {toggle('home', 'My home')}
-          {toggle('biz', 'My business')}
+    <form className="bezel" noValidate onSubmit={submit} data-rv>
+      <div className="core">
+        <p className="form-title">Request a quote</p>
+        <div className="two">
+          <div className="field"><label htmlFor="f-name">Name</label><input id="f-name" name="name" autoComplete="name" required /></div>
+          <div className="field"><label htmlFor="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" required /></div>
         </div>
+        <div className="field">
+          <span className="fl">This is for</span>
+          <div className="seg" role="group" aria-label="This is for" style={{ gridTemplateColumns: '1fr 1fr' }}>
+            <button type="button" aria-pressed={kind === 'home'} onClick={() => setKind('home')}>My home</button>
+            <button type="button" aria-pressed={kind === 'biz'} onClick={() => setKind('biz')}>My business</button>
+          </div>
+        </div>
+        <div className="field">
+          <label htmlFor="f-req">What do you need?</label>
+          <textarea id="f-req" name="req" value={req} onChange={(e) => setReq(e.target.value)} placeholder="e.g. Inverter and battery for a 3 BHK flat, 2-hour cuts most evenings" />
+        </div>
+        <button className="btn btn-dark" type="submit">Request my quote<span className="isle"><Arrow /></span></button>
+        <p className="fine" role={error ? 'alert' : undefined} style={error ? { color: '#a23a1d' } : undefined}>
+          {error || 'Opens WhatsApp with your details filled in. Prefer to talk now? Call the number on the left.'}
+        </p>
       </div>
-      <label className={label}>
-        Requirement
-        <textarea
-          name="req"
-          rows={3}
-          placeholder="e.g. Inverter and battery for a 3 BHK flat, frequent 2-hour cuts"
-          className={`${field} resize-y py-3 leading-normal`}
-        />
-      </label>
-      <button
-        type="submit"
-        className="fill-wipe h-[52px] cursor-pointer bg-btn text-sm font-semibold tracking-[.02em] text-on-btn [--wipe:var(--color-ink)] hover:text-bg"
-      >
-        Send on WhatsApp
-      </button>
-      <p className="text-[13px] text-muted">Opens WhatsApp with your details filled in. Or just call.</p>
     </form>
   );
 }
